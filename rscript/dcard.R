@@ -20,8 +20,8 @@ for(i in min:max){
     list = c(list,a)
     document <- fromJSON(file=url, method='C')
     print(i)
-    print(document$version[[1]]$title)
-    print(document$forum_name)
+    print(paste0('    類別:',document$forum_name))
+    print(paste0('    標題:',document$version[[1]]$title))
     gc()
     #暫存一下好了怕當機
     #length(document$comment)
@@ -34,10 +34,14 @@ for(i in min:max){
     list_df[x,1:3] = c(document$forum_name,document$version[[1]]$title,content_list)
     x = x + 1
     write.csv(list_df,paste0('output/',min,'_',max,'_Dcard.csv'),row.names=F)
-    Sys.sleep(runif(1,2,5))
+    sec = runif(1,2,5)
+    print(paste0('loading... 稍等',sec,'秒'))
+    Sys.sleep(sec)
   }, error=function(e){
     print(paste0('   Dcard',': ',i,' 失敗'))
-    Sys.sleep(runif(1,1,3))
+    sec = runif(1,1,3)
+    print(paste0('loading... 稍等',sec,'秒'))
+    Sys.sleep(sec)
     gc()
   })
 }
