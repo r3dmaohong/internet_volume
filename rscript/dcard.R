@@ -1,5 +1,7 @@
 ##https://www.dcard.tw/api/post/all/85846
 ##http://stackoverflow.com/questions/28418770/using-rvest-or-httr-to-log-in-to-non-standard-forms-on-a-webpage
+
+##People Talking About This
 rm(list = ls()) #去除工作空間中所有物件
 path = 'D:\\abc\\wjhong\\projects\\internet_volume'
 setwd(path)
