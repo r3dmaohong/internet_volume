@@ -10,8 +10,8 @@ library("httr")
 ##爬json
 x = 1
 list_df = data.frame('類型'=character(),'標題'=character(),'內容'=character(),stringsAsFactors=F)
-min = 1200000
-max = 1220000
+min = 1100000
+max = 1199999
 for(i in min:max){
   tryCatch({
     url <- paste0("https://www.dcard.tw/api/post/all/",i)
