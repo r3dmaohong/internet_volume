@@ -1,19 +1,20 @@
-rm(list = ls()) #¥h°£¤u§@ªÅ¶¡¤¤©Ò¦³ª«¥ó
-gc() #°O¾ĞÅéÄÀ©ñ
-#path<-"C:\\Documents and Settings\\wjhong\\®à­±\\ºô¸ôª¦ÂÎ"
+rm(list = ls()) #å»é™¤å·¥ä½œç©ºé–“ä¸­æ‰€æœ‰ç‰©ä»¶
+gc() #è¨˜æ†¶é«”é‡‹æ”¾
+#path<-"C:\\Documents and Settings\\wjhong\\æ¡Œé¢\\ç¶²è·¯çˆ¬èŸ²"
 setwd(path)
 start.time<-Sys.time()
 
 library(rvest)
 library(plyr)
 
-result_export_all = data.frame('Â¾°È¥N½X'=numeric(),'Â¾°È¦WºÙ'=character(),'1¦~¥H¤U'=character(),'1~3¦~'=character(),'3~5¦~'=character(),'5~7¦~'=character(),'7¦~¥H¤W'=character(),'¤u§@¤º®e'=character(),'¬ÛÃö±M·~ÃÒ·Ó'=character(),'¥¼¨ÓÂ¾²Pµo®i'=character(),stringsAsFactors=F)
-##§Q¥Î¦Cªí¨ú±o¦U¤å³¹id
+##dfå°šæœªå®šç¾©
+result_export_all = data.frame('è·å‹™ä»£ç¢¼'=numeric(),'è·å‹™åç¨±'=character(),'1å¹´ä»¥ä¸‹'=character(),'1~3å¹´'=character(),'3~5å¹´'=character(),'5~7å¹´'=character(),'7å¹´ä»¥ä¸Š'=character(),'å·¥ä½œå…§å®¹'=character(),'ç›¸é—œå°ˆæ¥­è­‰ç…§'=character(),'æœªä¾†è·æ¶¯ç™¼å±•'=character(),stringsAsFactors=F)
+##åˆ©ç”¨åˆ—è¡¨å–å¾—å„æ–‡ç« id
 temp_link = c()
 for(x in 1:10){
   url <- paste('http://www.ursalary.com/search.php?&p=',x,sep='')
   
-  #result_export = data.frame('Â¾°È¥N½X'=numeric(),'Â¾°È¦WºÙ'=character(),'1¦~¥H¤U'=character(),'1~3¦~'=character(),'3~5¦~'=character(),'5~7¦~'=character(),'7¦~¥H¤W'=character(),'¤u§@¤º®e'=character(),'¬ÛÃö±M·~ÃÒ·Ó'=character(),'¥¼¨ÓÂ¾²Pµo®i'=character(),stringsAsFactors=F)
+  #result_export = data.frame('è·å‹™ä»£ç¢¼'=numeric(),'è·å‹™åç¨±'=character(),'1å¹´ä»¥ä¸‹'=character(),'1~3å¹´'=character(),'3~5å¹´'=character(),'5~7å¹´'=character(),'7å¹´ä»¥ä¸Š'=character(),'å·¥ä½œå…§å®¹'=character(),'ç›¸é—œå°ˆæ¥­è­‰ç…§'=character(),'æœªä¾†è·æ¶¯ç™¼å±•'=character(),stringsAsFactors=F)
   
   title_css = read_html(url) %>% html_nodes("a") %>% html_attr("href")
   title_css = unique(title_css)
@@ -21,17 +22,18 @@ for(x in 1:10){
   title_css = paste0('http://www.ursalary.com/',title_css)
   temp_link = c(temp_link, title_css)
   sleep_time = runif(1,2,5)
-  print(paste0('²Ä',x,'­¶¦Cªílink§ì¨ú§¹¦¨'))
-  print(paste0('loading... ¼È°±',sleep_time,'¬í'))
+  print(paste0('ç¬¬',x,'é åˆ—è¡¨linkæŠ“å–å®Œæˆ'))
+  print(paste0('loading... æš«åœ',sleep_time,'ç§’'))
   Sys.sleep(sleep_time)
-  gc() #°O¾ĞÅéÄÀ©ñ
+  gc() #è¨˜æ†¶é«”é‡‹æ”¾
 }
-##¨Ï¥Î§ì¥X¨Óªºlink§@ª¦ÂÎ
+##ä½¿ç”¨æŠ“å‡ºä¾†çš„linkä½œçˆ¬èŸ²
 for(i in 1:length(temp_link)){
   url <- temp_link[i]
   title_css = read_html(url) %>% html_nodes("ul li") %>% html_text()
-  utf8_text_title <- toUTF8(title_css) ## ±N®»¤U¨Óªº¼ĞÃDÂà¦¨ UTF8
+  utf8_text_title <- toUTF8(title_css) ## å°‡æ‰ä¸‹ä¾†çš„æ¨™é¡Œè½‰æˆ UTF8
+##å„å¼é›œäº‚ï¼Œä»¥greplåˆ¤æ–·æ¨™é¡Œï¼Ÿ
 }
 
 
-write.csv(result_NT,'ª¦ÂÎ.csv',row.names=F)
+write.csv(result_NT,'çˆ¬èŸ².csv',row.names=F)
