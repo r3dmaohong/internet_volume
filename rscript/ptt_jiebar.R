@@ -98,14 +98,14 @@ jieba_ptt = jieba_ptt[which(!grepl('[0-9]',jieba_ptt))]
 jieba_ptt_df = as.data.frame(jieba_ptt)
 jieba_ptt_cdf = ddply(jieba_ptt_df , c('jieba_ptt'), nrow)
 jieba_ptt_cdf = jieba_ptt_cdf[order(-jieba_ptt_cdf$V1),]
-write.csv(jieba_ptt_cdf,paste0(format(Sys.time(), "%Y_%d_%b"),'jieba_ptt_output_tolower_temp.csv'),row.names=F)
+#write.csv(jieba_ptt_cdf,paste0('output/ptt/',format(Sys.time(), "%Y_%d_%b"),'jieba_ptt_output_tolower_temp.csv'),row.names=F)
 
 ##不知為何沒tolower.. once again
 jieba_ptt_cdf[,1] = tolower(jieba_ptt_cdf[,1])
 jieba_ptt_cdf = ddply(jieba_ptt_cdf , c('jieba_ptt'), summarize, sum(V1))
 jieba_ptt_cdf = jieba_ptt_cdf[order(-jieba_ptt_cdf$..1,jieba_ptt_cdf$jieba_ptt),]
 
-write.csv(jieba_ptt_cdf,paste0(format(Sys.time(), "%Y_%d_%b"),'jieba_ptt_output_tolower_last.csv'),row.names=F)
+write.csv(jieba_ptt_cdf,paste0('output/ptt/',format(Sys.time(), "%Y_%d_%b"),'jieba_ptt_output_tolower_last.csv'),row.names=F)
 
 
 #ptt
