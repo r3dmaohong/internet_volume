@@ -13,13 +13,7 @@ library(cluster)
 library(data.table) 
 library(XML)
 library(RCurl)
-library(tm)
-library(tmcn)
-library(Rwordseg)
-#library(wordcloud)
-library(compiler)
-##修正termdocumentmatrix問題用
-source(paste0(path,'\\rscript\\function\\error_solve_termdocumentmatrix.R'), print.eval  = TRUE)
+
 # returns string w/o leading or trailing whitespace
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
