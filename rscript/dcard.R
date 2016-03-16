@@ -6,7 +6,7 @@ rm(list = ls()) #去除工作空間中所有物件
 path = 'D:\\abc\\wjhong\\projects\\internet_volume'
 setwd(path)
 list = c()
-n
+library(httr)
 ##爬json
 list_df = data.frame('類型'=character(),'標題'=character(),'日期'=character(),'文章ID'=character(),'文章內容'=character(),'回覆內容'=character(),stringsAsFactors=F)
 #3937229
