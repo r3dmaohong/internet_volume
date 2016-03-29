@@ -63,9 +63,9 @@ ptt_crawler_jiebar <- function(link,min,max){
       ##which contains 落點
       gc() #記憶體釋放
       Sys.sleep(runif(1,2,5))
-      print(paste0('ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
+      print(paste0(forum_name, ' ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
     }, error = function(e) {
-      print(paste0('ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
+      print(paste0(forum_name, ' ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
       Sys.sleep(runif(1,2,5))
     })
     
