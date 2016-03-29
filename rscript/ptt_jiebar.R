@@ -54,6 +54,7 @@ ptt_crawler_jiebar <- function(link,min,max){
       ##¥h°£id
       title_css1 = read_html(url) %>% html_nodes("span") %>% html_text()
       utf8_text_title1 <- iconv(title_css1,'utf8')
+
       id_delete = utf8_text_title1[which(grepl(': ',utf8_text_title1))-1]
       id_delete = c(id_delete, utf8_text_title1[1:8])
       for(x in 1:length(id_delete)){
