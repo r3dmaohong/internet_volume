@@ -1,9 +1,4 @@
-rm(list = ls()) #去除工作空間中所有物件
-gc() #記憶體釋放
-path<-"D:\\abc\\wjhong\\projects\\internet_volume"
-setwd(path)
-start.time<-Sys.time()
-
+##ptt jieba
 library(rvest)
 library(plyr)
 library(XML)
@@ -107,13 +102,13 @@ ptt_crawler_jiebar <- function(link,min,max){
   
   write.csv(jieba_ptt_cdf,paste0('output/ptt/',format(Sys.time(), "%Y_%d_%b"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
   
-  ##之前收到的手動填寫公司名稱
-  #temp = read.csv(file.choose(),stringsAsFactors=F)
-  #temp = temp[,1]
-  #temp = tolower(temp)
+  #之前收到的手動填寫公司名稱
+  temp = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
+  temp = temp[,1]
+  temp = tolower(temp)
   
-  #inter_list= intersect(jieba_ptt_cdf[,1],temp)
-  #ptt2 = jieba_ptt_cdf[which(jieba_ptt_cdf[,1] %in% inter_list),]
-  #write.csv(ptt2,'測試交集結果.csv',row.names=F)
+  inter_list= intersect(jieba_ptt_cdf[,1],temp)
+  ptt2 = jieba_ptt_cdf[which(jieba_ptt_cdf[,1] %in% inter_list),]
+  write.csv(ptt2,paste0(forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
 }
 

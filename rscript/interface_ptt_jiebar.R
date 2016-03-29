@@ -1,3 +1,9 @@
+rm(list = ls()) #去除工作空間中所有物件
+gc() #記憶體釋放
+path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+setwd(path)
+start.time<-Sys.time()
+
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\ptt_jiebar.R', print.eval  = TRUE)
 
 ptt_crawler_jiebar('https://www.ptt.cc/bbs/Finance/index',750,887)
