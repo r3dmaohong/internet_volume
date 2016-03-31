@@ -52,6 +52,7 @@ ptt_crawler_jiebar <- function(link,min,max){
 
       id_delete = utf8_text_title1[which(grepl(': ',utf8_text_title1))-1]
       id_delete = c(id_delete, utf8_text_title1[1:8])
+      id_delete = id_delete[which(!is.na(id_delete))]
       for(x in 1:length(id_delete)){
         utf8_text_title=gsub(id_delete[x],'',utf8_text_title)
       }
@@ -72,7 +73,7 @@ ptt_crawler_jiebar <- function(link,min,max){
   }
   print(paste0(forum_name,' : ',length(ptt_data),'筆'))
   
-  write.csv(ptt_data,paste0(forum_name,'_',min,'_',max,'.csv'))
+  write.csv(ptt_data,paste0('ptt/',forum_name,'_',min,'_',max,'.csv'))
   
   
   library(jiebaR)
@@ -100,7 +101,7 @@ ptt_crawler_jiebar <- function(link,min,max){
   jieba_ptt_cdf = ddply(jieba_ptt_cdf , c('jieba_ptt'), summarize, sum(V1))
   jieba_ptt_cdf = jieba_ptt_cdf[order(-jieba_ptt_cdf$..1,jieba_ptt_cdf$jieba_ptt),]
   
-  write.csv(jieba_ptt_cdf,paste0('output/ptt/',format(Sys.time(), "%Y_%d_%b"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+  write.csv(jieba_ptt_cdf,paste0('ptt/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
   
   #之前收到的手動填寫公司名稱
   temp = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)

@@ -40,7 +40,6 @@ library(plyr)
 temp = ddply(all_temp , '詞彙', summarize, 總次數=sum(次數))
 temp = temp[order(-temp$總次數),]
 
-now = Sys.time()
-now = gsub(':','_',gsub(' ','_',now))
+now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
 
 write.csv(temp,paste0(now,'整合詞彙結果.csv'),row.names=F)
