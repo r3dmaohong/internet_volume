@@ -32,3 +32,47 @@ for(i in 1:length(links_data_yahoo)){
   print(paste0('yahoo第',i,'筆  ',i/length(links_data_yahoo)*100,'%'))
   Sys.sleep(runif(1,2,5))
 }
+
+
+forum_name = 'yahoo'
+min=1
+max=200
+
+write.csv(temp_yahoo_data,paste0('yahoo/',forum_name,'_',min,'_',max,'.csv'))
+
+yahoo_data = temp_yahoo_data
+library(jiebaR)
+cutter = worker()
+jieba_yahoo = {}
+yahoo_data = tolower(yahoo_data)
+for(i in 1:length(yahoo_data)){
+  temp = segment(yahoo_data[i], cutter)
+  jieba_yahoo = c(jieba_yahoo,temp)
+  print(paste0('jiebar :',i/length(yahoo_data)*100,'%'))
+}
+##去除單字
+jieba_yahoo = jieba_yahoo[which(nchar(jieba_yahoo)>1)]
+##去除數值與id
+jieba_yahoo = jieba_yahoo[which(!grepl('[0-9]',jieba_yahoo))]
+
+
+jieba_yahoo_df = as.data.frame(jieba_yahoo)
+jieba_yahoo_cdf = ddply(jieba_yahoo_df , c('jieba_yahoo'), nrow)
+jieba_yahoo_cdf = jieba_yahoo_cdf[order(-jieba_yahoo_cdf$V1),]
+#write.csv(jieba_yahoo_cdf,paste0('output/yahoo/',format(Sys.time(), "%Y_%d_%b"),'jieba_yahoo_output_tolower_temp.csv'),row.names=F)
+
+##不知為何沒tolower.. once again
+jieba_yahoo_cdf[,1] = tolower(jieba_yahoo_cdf[,1])
+jieba_yahoo_cdf = ddply(jieba_yahoo_cdf , c('jieba_yahoo'), summarize, sum(V1))
+jieba_yahoo_cdf = jieba_yahoo_cdf[order(-jieba_yahoo_cdf$..1,jieba_yahoo_cdf$jieba_yahoo),]
+
+write.csv(jieba_yahoo_cdf,paste0('yahoo/',format(Sys.time(), "%Y_%d_%b"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+
+##之前收到的手動填寫公司名稱
+temp = read.csv(file.choose(),stringsAsFactors=F)
+temp = temp[,1]
+temp = tolower(temp)
+
+inter_list= intersect(jieba_yahoo_cdf[,1],temp)
+yahoo2 = jieba_yahoo_cdf[which(jieba_yahoo_cdf[,1] %in% inter_list),]
+write.csv(yahoo2,'yahoo測試交集結果.csv',row.names=F)

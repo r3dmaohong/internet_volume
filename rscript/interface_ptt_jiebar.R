@@ -42,4 +42,4 @@ temp = temp[order(-temp$總次數),]
 
 now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
 
-write.csv(temp,paste0(now,'整合詞彙結果.csv'),row.names=F)
+write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)

@@ -8,9 +8,6 @@ library(cluster)
 library(XML)
 library(RCurl)
 
-# returns string w/o leading or trailing whitespace
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-
 #gc
 jgc <- function()
 {
