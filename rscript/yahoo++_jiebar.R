@@ -112,5 +112,7 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
+  
+  print(paste0('yahoo知識+ ',forum_name,'爬蟲與分析結束'))
 }
 

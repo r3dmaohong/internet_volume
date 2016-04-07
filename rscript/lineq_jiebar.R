@@ -126,6 +126,7 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   write.csv(lineq2,paste0(start.time,'/',forum_name,'_',last,'_',recent,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)  
+  print(paste0('lineq ',forum_name,'爬蟲與分析結束'))
 }
 
 ##'http://lineq.tw/search/question?q=%E6%B1%82%E8%81%B7%20%E6%9C%8D%E5%8B%99%E6%A5%AD&sort=date&sel=all'

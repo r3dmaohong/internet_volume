@@ -49,23 +49,79 @@ if(FALSE){
 #https://tw.answers.yahoo.com/search/search_result?p=%E7%A7%91%E5%A4%A7&s=
 
 ##整合所有檔案
-path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)
-setwd(path)
-csv_list = list.files(pattern="*.csv")
-for(i in 1:length(csv_list)){
-  temp = read.csv(csv_list[i],stringsAsFactors=F)
-  colnames(temp) = c('詞彙','次數')
-  if(i==1){
-    all_temp = temp
+sc_or_com <- function(n){
+  if(n=='學校'){
+    ##學校就轉換然後重新算一次freq
+    path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)
+    setwd(path)
+    csv_list = list.files(pattern="*.csv")
+    for(i in 1:length(csv_list)){
+      temp = read.csv(csv_list[i],stringsAsFactors=F)
+      colnames(temp) = c('詞彙','次數')
+      if(i==1){
+        all_temp = temp
+      }else{
+        all_temp = rbind(all_temp,temp)
+      }
+    }
+    
+    tmp2 = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
+    tmp2[,1] = tolower(tmp2[,1])
+    all_temp$out=''
+    for(i in 1:nrow(all_temp)){
+      if(toString(tmp2[which(tmp2[,1]==all_temp[i,1]),2])!=''){
+        all_temp[i,1] = tmp2[which(tmp2[,1]==all_temp[i,1]),2][1]
+        print(all_temp[i,1])
+      }else if(toString(tmp2[which(tmp2[,2]==all_temp[i,1]),2])!=''){
+        
+      }else{
+        all_temp$out[i] = 1
+      }
+    }
+    ##作紀錄
+    write.csv(all_temp[which(all_temp$out==1),],'未列入之大學名稱供查看.csv',row.names=F)
+    
+    all_temp = all_temp[which(all_temp$out!=1),]
+    
+    
+    library(plyr)
+    temp = ddply(all_temp , '詞彙', summarize, 總次數=sum(次數))
+    temp = temp[order(-temp$總次數),]
+    
+    now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
+    
+    write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
+    
+  }else if(n=='公司'){
+    ##公司就不對照轉換了
+    ##以免有問題
+    path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)
+    setwd(path)
+    csv_list = list.files(pattern="*.csv")
+    for(i in 1:length(csv_list)){
+      temp = read.csv(csv_list[i],stringsAsFactors=F)
+      colnames(temp) = c('詞彙','次數')
+      if(i==1){
+        all_temp = temp
+      }else{
+        all_temp = rbind(all_temp,temp)
+      }
+    }
+    
+    library(plyr)
+    temp = ddply(all_temp , '詞彙', summarize, 總次數=sum(次數))
+    temp = temp[order(-temp$總次數),]
+    
+    now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
+    
+    write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
   }else{
-    all_temp = rbind(all_temp,temp)
+    n <- readline(prompt="輸入[學校] or [公司]: ")
+    sc_or_com(n)
   }
 }
 
-library(plyr)
-temp = ddply(all_temp , '詞彙', summarize, 總次數=sum(次數))
-temp = temp[order(-temp$總次數),]
+n <- readline(prompt="輸入[學校] or [公司]: ")
+sc_or_com(n)
 
-now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
 
-write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
