@@ -41,7 +41,24 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   
   yahoo_data = temp_yahoo_data
   library(jiebaR)
-  cutter = worker()
+  ##匯入詞庫
+  tmp = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
+  temp = unique(c(tmp$company,tmp$最終比對結果))
+  tmp2 = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
+  temp = unique(c(temp,tmp2$trim後原始,tmp2$對應表))
+  word_DB = tolower(temp)
+  #write.table(temp, file="D:\\abc\\wjhong\\projects\\合併詞庫.txt", row.names=FALSE, col.names=FALSE)
+  
+  #cutter = worker(type  = "mix"，user  = "D:/somefile.xxx")
+  #cutter = worker()
+  cutter=worker()
+  #sapply(temp,function(x) new_user_word(cutter,x,"n"))
+  for(xj in 1:length(word_DB)){
+    new_user_word(cutter,word_DB[xj],"n")
+  }
+  
+  
+  
   jieba_yahoo = {}
   yahoo_data = tolower(yahoo_data)
   for(i in 1:length(yahoo_data)){
@@ -65,24 +82,24 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   jieba_yahoo_cdf = ddply(jieba_yahoo_cdf , c('jieba_yahoo'), summarize, sum(V1))
   jieba_yahoo_cdf = jieba_yahoo_cdf[order(-jieba_yahoo_cdf$..1,jieba_yahoo_cdf$jieba_yahoo),]
   
-  write.csv(jieba_yahoo_cdf,paste0('yahoo/',format(Sys.time(), "%Y_%d_%b"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+  write.csv(jieba_yahoo_cdf,paste0('yahoo/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
   
-  ##之前收到的手動填寫公司名稱
-  temp = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
-  temp = temp[,1]
-  temp = tolower(temp)
+  tmp = tmp[,c('company','最終比對結果')]
+  tmp2 = tmp2[,1:2]
+  colnames(tmp) = c('before','after')
+  colnames(tmp2) = c('before','after')
+  tmp3 = rbind(tmp,tmp2)
   
-  inter_list= intersect(jieba_yahoo_cdf[,1],temp)
+  inter_list= intersect(jieba_yahoo_cdf[,1],word_DB)
   yahoo2 = jieba_yahoo_cdf[which(jieba_yahoo_cdf[,1] %in% inter_list),]
+  
+  ##讀取剔除表
+  word_remove = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
+  word_remove = word_remove[,1]
+  yahoo2 = yahoo2[which(!(yahoo2[,1] %in% word_remove)),]
+  
   write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
 }
-
-
-
-
-forum_name = 'yahoo'
-min=1
-max=200
 
