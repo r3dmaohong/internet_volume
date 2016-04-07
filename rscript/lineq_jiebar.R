@@ -80,11 +80,17 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   
   jieba_lineq = {}
   lineq_data = tolower(lineq_data)
-  for(i in 1:length(lineq_data)){
-    temp = segment(lineq_data[i], cutter)
-    jieba_lineq = c(jieba_lineq,temp)
-    print(paste0('jiebar :',i/length(lineq_data)*100,'%'))
-  }
+  
+  tryCatch({
+    for(i in 1:length(lineq_data)){
+      temp = segment(lineq_data[i], cutter)
+      jieba_lineq = c(jieba_lineq,temp)
+      print(paste0('jiebar :',i/length(lineq_data)*100,'%'))
+    }
+  }, error = function(e) {
+    conditionMessage(e) # 這就會是"demo error"
+  })
+  
   ##去除單字
   jieba_lineq = jieba_lineq[which(nchar(jieba_lineq)>1)]
   ##去除數值與id

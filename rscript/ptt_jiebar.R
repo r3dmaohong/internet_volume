@@ -93,11 +93,17 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
   
   jieba_ptt = {}
   ptt_data = tolower(ptt_data)
-  for(i in 1:length(ptt_data)){
-    temp = segment(ptt_data[i], cutter)
-    jieba_ptt = c(jieba_ptt,temp)
-    print(paste0('jiebar :',i/length(ptt_data)*100,'%'))
-  }
+  
+  tryCatch({
+    for(i in 1:length(ptt_data)){
+      temp = segment(ptt_data[i], cutter)
+      jieba_ptt = c(jieba_ptt,temp)
+      print(paste0('jiebar :',i/length(ptt_data)*100,'%'))
+    }
+  }, error = function(e) {
+    conditionMessage(e) # 這就會是"demo error"
+  })
+
   ##去除單字
   jieba_ptt = jieba_ptt[which(nchar(jieba_ptt)>1)]
   ##去除數值與id
