@@ -75,7 +75,8 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   inter_list= intersect(jieba_yahoo_cdf[,1],temp)
   yahoo2 = jieba_yahoo_cdf[which(jieba_yahoo_cdf[,1] %in% inter_list),]
   write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
-  
+  path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+  setwd(path)
 }
 
 

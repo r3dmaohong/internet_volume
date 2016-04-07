@@ -15,7 +15,7 @@ jgc <- function()
   .jcall("java/lang/System", method = "gc")
 }  
 
-ptt_crawler_jiebar <- function(link,min,max){
+ptt_crawler_jiebar <- function(link,min,max,start.time){
   links_data_ptt = {}
   ##先讀取各頁文章的網址
   forum_name = substr(link,unlist(gregexpr(pattern ='bbs',link))+4,unlist(gregexpr(pattern ='index',link))-2)
@@ -107,6 +107,9 @@ ptt_crawler_jiebar <- function(link,min,max){
   
   inter_list= intersect(jieba_ptt_cdf[,1],temp)
   ptt2 = jieba_ptt_cdf[which(jieba_ptt_cdf[,1] %in% inter_list),]
-  write.csv(ptt2,paste0(forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
+  
+  write.csv(ptt2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
+  path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+  setwd(path)
 }
 
