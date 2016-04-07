@@ -41,10 +41,21 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     temp_lineq_data = c(temp_lineq_data,temp)
     ##which contains 落點
     gc() #記憶體釋放
+    
+    
+    
     print(paste0('linq第',i,'筆  ',i/length(links_data_lineq)*100,'%'))
     Sys.sleep(runif(1,2,5))
   }
-  write.csv(temp_lineq_data,paste0('lineq/',forum_name,'_',min,'_',max,'.csv'))
+  
+  title_css = read_html(url) %>% html_nodes(".header_time") %>% html_text()
+  recent <- iconv(title_css,'utf8')
+  recent = strsplit(recent,' ')[[1]][1]
+  recent = gsub('[.]','',recent)
+  
+  last = gsub('-','',strsplit(toString(Sys.time()),' ')[[1]][1])
+  
+  write.csv(recent_lineq_data,paste0('lineq/',forum_name,'_',last,'_',recent,'.csv'))
   
   lineq_data = temp_lineq_data
   
@@ -90,7 +101,7 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   jieba_lineq_cdf = ddply(jieba_lineq_cdf , c('jieba_lineq'), summarize, sum(V1))
   jieba_lineq_cdf = jieba_lineq_cdf[order(-jieba_lineq_cdf$..1,jieba_lineq_cdf$jieba_lineq),]
   
-  write.csv(jieba_lineq_cdf,paste0('lineq/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+  write.csv(jieba_lineq_cdf,paste0('lineq/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',last,'_',recent,'.csv'),row.names=F)
   
   tmp = tmp[,c('company','最終比對結果')]
   tmp2 = tmp2[,1:2]
@@ -106,15 +117,13 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   word_remove = word_remove[,1]
   lineq2 = lineq2[which(!(lineq2[,1] %in% word_remove)),]
   
-  write.csv(lineq2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
+  write.csv(lineq2,paste0(start.time,'/',forum_name,'_',last,'_',recent,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)  
 }
 
 ##'http://lineq.tw/search/question?q=%E6%B1%82%E8%81%B7%20%E6%9C%8D%E5%8B%99%E6%A5%AD&sort=date&sel=all'
 #print(iconv(read_html(url) %>% html_nodes(".description_title") %>% html_text(),'utf8'))
-
-
 
 
 

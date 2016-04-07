@@ -36,8 +36,14 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     Sys.sleep(runif(1,2,5))
   }
   
+  last=links_data_yahoo[which(grepl('qid',links_data_yahoo))]
+  last = last[length(last)]
+  last = gsub("[^0-9]", "",last)
+  last = substr(last,1,8)
   
-  write.csv(temp_yahoo_data,paste0('yahoo/',forum_name,'_',min,'_',max,'.csv'))
+  recent = gsub('-','',strsplit(toString(Sys.time()),' ')[[1]][1])
+  
+  write.csv(temp_yahoo_data,paste0('yahoo/',forum_name,'_',recent,'_',last,'.csv'))
   
   yahoo_data = temp_yahoo_data
   library(jiebaR)
@@ -82,7 +88,7 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   jieba_yahoo_cdf = ddply(jieba_yahoo_cdf , c('jieba_yahoo'), summarize, sum(V1))
   jieba_yahoo_cdf = jieba_yahoo_cdf[order(-jieba_yahoo_cdf$..1,jieba_yahoo_cdf$jieba_yahoo),]
   
-  write.csv(jieba_yahoo_cdf,paste0('yahoo/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+  write.csv(jieba_yahoo_cdf,paste0('yahoo/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
   
   tmp = tmp[,c('company','最終比對結果')]
   tmp2 = tmp2[,1:2]
@@ -98,7 +104,7 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   word_remove = word_remove[,1]
   yahoo2 = yahoo2[which(!(yahoo2[,1] %in% word_remove)),]
   
-  write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
+  write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
 }

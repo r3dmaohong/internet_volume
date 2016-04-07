@@ -135,7 +135,7 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
     
   #})
   
-  write.csv(ptt2,paste0(start.time,'/',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
+  write.csv(ptt2,paste0(start.time,'/ptt_',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
 }
