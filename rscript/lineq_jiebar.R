@@ -19,27 +19,33 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     title_css = read_html(url) %>% html_nodes("p") %>% html_nodes("a") %>% html_attr('href')
     links_data_lineq = c(links_data_lineq,title_css)
     gc() #記憶體釋放
-    print(paste0('lineq第',i,'頁'))
+    cat("\r lineq 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ')
+    #print(paste0('lineq第',i,'頁'))
     Sys.sleep(runif(1,2,5))
   }
-  
+  cat("\n ")
   temp_lineq_data = {}
   
   for(i in 1:length(links_data_lineq)){
-    url = paste0('http://lineq.tw',links_data_lineq[i])
-    title_css = read_html(url) %>% html_nodes("p") %>% html_text()
-    temp <- iconv(title_css,'utf8')
+    tryCatch({
+      url = paste0('http://lineq.tw',links_data_lineq[i])
+      title_css = read_html(url) %>% html_nodes("p") %>% html_text()
+      temp <- iconv(title_css,'utf8')
+      
+      print(paste0(substr(temp[2],1,10),'...'))
+      temp_lineq_data = c(temp_lineq_data,temp)
+      ##which contains 落點
+      gc() #記憶體釋放
+      
+      cat("\r lineq 第",i, '筆 ==>',i/length(links_data_lineq)*100, '% completed                              ')
+      #print(paste0('linq第',i,'筆  ',i/length(links_data_lineq)*100,'%'))
+      Sys.sleep(runif(1,2,5))
+    },error=function(e){
+      
+    })
     
-    print(paste0(substr(temp[2],1,10),'...'))
-    temp_lineq_data = c(temp_lineq_data,temp)
-    ##which contains 落點
-    gc() #記憶體釋放
-    
-    
-    
-    print(paste0('linq第',i,'筆  ',i/length(links_data_lineq)*100,'%'))
-    Sys.sleep(runif(1,2,5))
   }
+  cat("\n ")
   
   title_css = read_html(url) %>% html_nodes(".header_time") %>% html_text()
   recent <- iconv(title_css,'utf8')
@@ -78,15 +84,18 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   #remove all punctuation except comma[^[:alnum:],]
   lineq_data = gsub('[^[:alnum:]]','',lineq_data)
   
-  tryCatch({
+
     for(i in 1:length(lineq_data)){
+      tryCatch({
       temp = segment(lineq_data[i], cutter)
       jieba_lineq = c(jieba_lineq,temp)
-      print(paste0('jiebar :',i/length(lineq_data)*100,'%'))
+      #print(paste0('jiebar :',i/length(lineq_data)*100,'%'))
+      cat("\r lineq jiebar : ",i/length(lineq_data) * 100, '% completed                              ')
+      }, error = function(e) {
+        conditionMessage(e) # 這就會是"demo error"
+      })
     }
-  }, error = function(e) {
-    conditionMessage(e) # 這就會是"demo error"
-  })
+  cat("\n ")
   
   ##去除單字
   jieba_lineq = jieba_lineq[which(nchar(jieba_lineq)>1)]

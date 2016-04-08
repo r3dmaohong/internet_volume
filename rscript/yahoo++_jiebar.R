@@ -19,12 +19,15 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     title_css = title_css[which(grepl('question',title_css) & !grepl('login',title_css))]
     links_data_yahoo = c(links_data_yahoo,title_css)
     gc() #記憶體釋放
-    print(paste0('yahoo第',i,'頁'))
+    cat("\r yahoo 第 ",i, '頁 ',i/max*100, '% completed                              ')
+    #print(paste0('yahoo第',i,'頁'))
     Sys.sleep(runif(1,2,5))    
   }
+  cat("\n ")
   temp_yahoo_data = {}
   ##將抓出的網址進行爬蟲
   for(i in 1:length(links_data_yahoo)){
+    tryCatch({
     url = paste0('https://tw.answers.yahoo.com',links_data_yahoo[i])
     title_css = read_html(url) %>% html_nodes("span") %>% html_text()
     temp <- iconv(title_css,'utf8')
@@ -32,9 +35,14 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     temp_yahoo_data = c(temp_yahoo_data,temp)
     ##which contains 落點
     gc() #記憶體釋放
-    print(paste0('yahoo第',i,'筆  ',i/length(links_data_yahoo)*100,'%'))
+    cat("\r yahoo 第",i, '筆 ==> ',i/length(links_data_yahoo)*100, '% completed                              ')
+    #print(paste0('yahoo第',i,'筆  ',i/length(links_data_yahoo)*100,'%'))
     Sys.sleep(runif(1,2,5))
+    },error=function(e){
+      
+    })
   }
+  cat("\n ")
   
   last=links_data_yahoo[which(grepl('qid',links_data_yahoo))]
   last = last[length(last)]
@@ -74,15 +82,20 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   #remove all punctuation except comma[^[:alnum:],]
   yahoo_data = gsub('[^[:alnum:]]','',yahoo_data)
   
-  tryCatch({
-    for(i in 1:length(yahoo_data)){
+  # create progress bar
+
+  for(i in 1:length(yahoo_data)){
+    tryCatch({
       temp = segment(yahoo_data[i], cutter)
       jieba_yahoo = c(jieba_yahoo,temp)
-      print(paste0('jiebar :',i/length(yahoo_data)*100,'%'))
-    }
-  }, error = function(e) {
-    conditionMessage(e) # 這就會是"demo error"
-  })
+      #print(paste0('jiebar :',i/length(yahoo_data)*100,'%'))
+      cat("\r yahoo jiebar : ",i/length(yahoo_data) * 100, '% completed                              ')
+    }, error = function(e) {
+      conditionMessage(e) # 這就會是"demo error"
+    })
+  }
+
+  cat("\n ")
 
   
   ##去除單字
@@ -120,7 +133,6 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   write.csv(yahoo2,paste0(start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
-  
   print(paste0('yahoo知識+ ',forum_name,'爬蟲與分析結束'))
 }
 

@@ -21,46 +21,49 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
     title_css = read_html(url) %>% html_nodes(".title") %>% html_nodes("a") %>% html_attr('href')
     links_data_ptt = c(links_data_ptt,title_css)
     gc() #記憶體釋放
-    print(paste0(forum_name,' ptt第',i,'頁'))
+    cat("\r ptt 第 ",i, '頁 ',(i-min+1)/(max-min+1)*100, '% completed                              ')
+    #print(paste0(forum_name,' ptt第',i,'頁'))
     Sys.sleep(runif(1,2,5))
   }
+  cat("\n ")
   ##剔除部相關之網址(挑選時已替除，不過在判斷一次)
-
   links_data_ptt =  links_data_ptt[which(grepl(forum_name,links_data_ptt))]
   
   ptt_data = {}
   ##將抓出的網址進行爬蟲
   for(i in 1:length(links_data_ptt)){
     tryCatch({
-      url = paste0('https://www.ptt.cc',links_data_ptt[i])
-      title_css = read_html(url) %>% html_nodes("#main-content") %>% html_text()
-      utf8_text_title <- iconv(title_css,'utf8')
-      
-      ##去除id
-      title_css1 = read_html(url) %>% html_nodes("span") %>% html_text()
-      utf8_text_title1 <- iconv(title_css1,'utf8')
-
-      id_delete = utf8_text_title1[which(grepl(': ',utf8_text_title1))-1]
-      id_delete = c(id_delete, utf8_text_title1[1:8])
-      id_delete = id_delete[which(!is.na(id_delete))]
-      for(x in 1:length(id_delete)){
-        utf8_text_title=gsub(id_delete[x],'',utf8_text_title)
-      }
-      
-      temp = utf8_text_title
-      
-      ##: 前兩個去掉
-      ptt_data = c(ptt_data,temp)
-      ##which contains 落點
-      gc() #記憶體釋放
-      Sys.sleep(runif(1,2,5))
-      print(paste0(forum_name, ' ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
+                              url = paste0('https://www.ptt.cc',links_data_ptt[i])
+                              title_css = read_html(url) %>% html_nodes("#main-content") %>% html_text()
+                              utf8_text_title <- iconv(title_css,'utf8')
+                              
+                              ##去除id
+                              title_css1 = read_html(url) %>% html_nodes("span") %>% html_text()
+                              utf8_text_title1 <- iconv(title_css1,'utf8')
+                              
+                              id_delete = utf8_text_title1[which(grepl(': ',utf8_text_title1))-1]
+                              id_delete = c(id_delete, utf8_text_title1[1:8])
+                              id_delete = id_delete[which(!is.na(id_delete))]
+                              for(x in 1:length(id_delete)){
+                                utf8_text_title=gsub(id_delete[x],'',utf8_text_title)
+                              }
+                              
+                              temp = utf8_text_title
+                              
+                              ##: 前兩個去掉
+                              ptt_data = c(ptt_data,temp)
+                              ##which contains 落點
+                              gc() #記憶體釋放
+                              Sys.sleep(runif(1,2,5))
+                              #print(paste0(forum_name, ' ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
+                              cat("\r ptt 第 ",i, '筆 ==>',i/length(links_data_ptt)*100, '% completed                              ')
     }, error = function(e) {
-      print(paste0(forum_name, ' ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
-      Sys.sleep(runif(1,2,5))
+                              print(paste0(forum_name, ' ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
+                              Sys.sleep(runif(1,2,5))
     })
     
   }
+  cat("\n ")
   print(paste0(forum_name,' : ',length(ptt_data),'筆'))
   
   write.csv(ptt_data,paste0('ptt/',forum_name,'_',min,'_',max,'.csv'))
@@ -93,14 +96,15 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
   
   tryCatch({
     for(i in 1:length(ptt_data)){
-      temp = segment(ptt_data[i], cutter)
-      jieba_ptt = c(jieba_ptt,temp)
-      print(paste0('jiebar :',i/length(ptt_data)*100,'%'))
+                              temp = segment(ptt_data[i], cutter)
+                              jieba_ptt = c(jieba_ptt,temp)
+                              #print(paste0('jiebar :',i/length(ptt_data)*100,'%'))
+                              cat("\r ptt jiebar : ",i/length(ptt_data) * 100, '% completed                              ')
     }
   }, error = function(e) {
     conditionMessage(e) # 這就會是"demo error"
   })
-
+  cat("\n ")
   ##去除單字
   jieba_ptt = jieba_ptt[which(nchar(jieba_ptt)>1)]
   ##去除數值與id
@@ -135,12 +139,13 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
   
   #test=sapply(ptt2[,1],function(x){
   #  return(tmp3$after[which(tmp3$before==x)])
-    
+  
   #})
   
   write.csv(ptt2,paste0(start.time,'/ptt_',forum_name,'_',min,'_',max,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
+  
   print(paste0('ptt ',forum_name,'爬蟲與分析結束'))
 }
 

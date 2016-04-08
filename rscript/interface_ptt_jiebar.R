@@ -8,6 +8,7 @@ start.time = gsub(":","_",start.time)
 mainDir = paste0('D:\\abc\\wjhong\\projects\\internet_volume\\output\\',start.time)
 dir.create(file.path(mainDir), showWarnings = FALSE)
 dir.create(file.path(paste0(mainDir,'\\union_output')), showWarnings = FALSE)
+dir.create(file.path(paste0(mainDir,'\\紀錄')), showWarnings = FALSE)
 
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\ptt_jiebar.R', print.eval  = TRUE)
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\lineq_jiebar.R', print.eval  = TRUE)
@@ -79,7 +80,7 @@ sc_or_com <- function(n){
       }
     }
     ##作紀錄
-    write.csv(all_temp[which(all_temp$out==1),],'未列入之大學名稱供查看.csv',row.names=F)
+    write.csv(all_temp[which(all_temp$out==1),],'紀錄\\未列入之大學名稱供查看.csv',row.names=F)
     
     all_temp = all_temp[which(all_temp$out!=1),]
     
@@ -91,7 +92,7 @@ sc_or_com <- function(n){
     now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
     
     write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
-    
+    return(temp)
   }else if(n=='公司'){
     ##公司就不對照轉換了
     ##以免有問題
@@ -115,6 +116,7 @@ sc_or_com <- function(n){
     now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
     
     write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
+    return(temp)
   }else{
     n <- readline(prompt="輸入[學校] or [公司]: ")
     sc_or_com(n)
@@ -122,6 +124,9 @@ sc_or_com <- function(n){
 }
 
 n <- readline(prompt="輸入[學校] or [公司]: ")
-sc_or_com(n)
+output <- sc_or_com(n)
 
+##大學名單
+
+college = read.table('D:\\abc\\wjhong\\projects\\internet_volume\\大學名單.txt')
 
