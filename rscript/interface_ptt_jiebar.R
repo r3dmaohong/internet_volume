@@ -130,3 +130,14 @@ output <- sc_or_com(n)
 
 college = read.table('D:\\abc\\wjhong\\projects\\internet_volume\\大學名單.txt')
 
+##抓不在大學名單內
+nc = output[which(!(output[,1] %in% college[,1])),]
+write.csv(nc,'union_output/20160408科大整合詞彙結果.csv',row.names=F)
+
+
+##公司
+comp = read.table('D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt')
+
+##抓不在大學名單內
+nc = output[which(!(output[,1] %in% comp[,1])),]
+write.csv(nc,'union_output/20160408服務業整合詞彙結果.csv',row.names=F)
