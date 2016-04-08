@@ -46,6 +46,8 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   write.csv(temp_yahoo_data,paste0('yahoo/',forum_name,'_',recent,'_',last,'.csv'))
   
   yahoo_data = temp_yahoo_data
+  ##yahoo_data = read.csv(file.choose(),stringsAsFactors=F)
+  ##yahoo_data = yahoo_data[,2]
   library(jiebaR)
   ##匯入詞庫
   tmp = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
@@ -67,6 +69,11 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   
   jieba_yahoo = {}
   yahoo_data = tolower(yahoo_data)
+  ##瓂\xa2\026
+  #remove all punctuation 
+  #remove all punctuation except comma[^[:alnum:],]
+  yahoo_data = gsub('[^[:alnum:]]','',yahoo_data)
+  
   tryCatch({
     for(i in 1:length(yahoo_data)){
       temp = segment(yahoo_data[i], cutter)
@@ -74,8 +81,9 @@ yahoo_crawler_jiebar <- function(link,forum_name,min,max,start.time){
       print(paste0('jiebar :',i/length(yahoo_data)*100,'%'))
     }
   }, error = function(e) {
-    #conditionMessage(e) # 這就會是"demo error"
+    conditionMessage(e) # 這就會是"demo error"
   })
+
   
   ##去除單字
   jieba_yahoo = jieba_yahoo[which(nchar(jieba_yahoo)>1)]

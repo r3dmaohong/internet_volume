@@ -9,13 +9,6 @@ library(cluster)
 library(XML)
 library(RCurl)
 
-#gc
-jgc <- function()
-{
-  gc()
-  .jcall("java/lang/System", method = "gc")
-}  
-
 lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   forum_name = forum_name
   links_data_lineq = {}
@@ -80,6 +73,10 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   
   jieba_lineq = {}
   lineq_data = tolower(lineq_data)
+  
+  #remove all punctuation 
+  #remove all punctuation except comma[^[:alnum:],]
+  lineq_data = gsub('[^[:alnum:]]','',lineq_data)
   
   tryCatch({
     for(i in 1:length(lineq_data)){

@@ -6,14 +6,7 @@ library(RCurl)
 library(SnowballC)
 library(cluster)   
 library(XML)
-library(RCurl)
-
-#gc
-jgc <- function()
-{
-  gc()
-  .jcall("java/lang/System", method = "gc")
-}  
+library(RCurl) 
 
 ptt_crawler_jiebar <- function(link,min,max,start.time){
   links_data_ptt = {}
@@ -93,6 +86,10 @@ ptt_crawler_jiebar <- function(link,min,max,start.time){
   
   jieba_ptt = {}
   ptt_data = tolower(ptt_data)
+  
+  #remove all punctuation 
+  #remove all punctuation except comma[^[:alnum:],]
+  ptt_data = gsub('[^[:alnum:]]','',ptt_data)
   
   tryCatch({
     for(i in 1:length(ptt_data)){
