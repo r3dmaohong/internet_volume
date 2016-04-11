@@ -10,9 +10,13 @@ dir.create(file.path(mainDir), showWarnings = FALSE)
 dir.create(file.path(paste0(mainDir,'\\union_output')), showWarnings = FALSE)
 dir.create(file.path(paste0(mainDir,'\\紀錄')), showWarnings = FALSE)
 
+##各網站
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\ptt_jiebar.R', print.eval  = TRUE)
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\lineq_jiebar.R', print.eval  = TRUE)
 source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\yahoo++_jiebar.R', print.eval  = TRUE)
+
+##jiebar提取
+source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\function\\jiebar分詞輸出.R', print.eval  = TRUE)
 
 ##科大
 if(TRUE){
@@ -20,7 +24,7 @@ if(TRUE){
   
   ##730 848
   #https://www.ptt.cc/bbs/V_ScHooL/index848.html
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/V_ScHooL/index',730,848,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/V_ScHooL/index','ptt測試',730,848,start.time)
 }
 
 ##服務業
