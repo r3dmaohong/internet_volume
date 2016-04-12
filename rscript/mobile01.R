@@ -1,12 +1,15 @@
 library(httr)
 library(rvest)
 library(tmcn)
-# Attempt to crawl LinkedIn, requires useragent to access Linkedin Sites
+
+# returns string w/o leading or trailing whitespace
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+
 ##設定user agent 才能爬mobile01
 uastring <- "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
 links_list = c()
 
-max = 1##300
+max = 300
 for(i in 1:max){
   tryCatch({
     session <- html_session(paste0("http://www.mobile01.com/topiclist.php?f=651&p=",i), user_agent(uastring))
@@ -33,7 +36,6 @@ for(j in 1:length(links_list)){
     page_css = read_html(session) %>% html_nodes(".numbers") %>% html_text()
     page_css = toUTF8(page_css)
     page_max = as.numeric(substr(page_css,unlist(gregexpr('共',page_css))+1,unlist(gregexpr('頁',page_css))[2]-1))
-    
     Sys.sleep(runif(1,2,5))
     
     for(i in 1:page_max){
@@ -49,13 +51,15 @@ for(j in 1:length(links_list)){
       Sys.sleep(runif(1,2,5))
     }
     
-    cat("\r mobile01 第 ",j, '筆 ==>' ,j/length(links_list)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+    cat("\r mobile01 第 ",j, '筆 : 共有',page_max,' 個分頁 ==>' ,j/length(links_list)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
 },error=function(e){
   
 })
 }
-
-
+cat("\n ")
+conversation_data = gsub('\r','',conversation_data )
+conversation_data = gsub('\n','',conversation_data )
+conversation_data = trim(conversation_data)
 #page_max = max(as.numeric(iconv(page_css,'utf8'))[which(!is.na(as.numeric(iconv(page_css,'utf8'))))])
 #session <- html_session("http://www.mobile01.com/topiclist.php?f=651&p=1", user_agent(uastring))
 #title_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_text()
