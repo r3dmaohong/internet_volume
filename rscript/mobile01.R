@@ -4,13 +4,65 @@ library(tmcn)
 # Attempt to crawl LinkedIn, requires useragent to access Linkedin Sites
 ##設定user agent 才能爬mobile01
 uastring <- "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
-session <- html_session("http://www.mobile01.com/forumtopic.php?c=21", user_agent(uastring))
-title_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_text()
+links_list = c()
+
+max = 1##300
+for(i in 1:max){
+  tryCatch({
+    session <- html_session(paste0("http://www.mobile01.com/topiclist.php?f=651&p=",i), user_agent(uastring))
+    link_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_attr('href')
+    links = paste0('http://www.mobile01.com/',link_css)
+    links_list = c(links_list,links)
+    
+    gc() #記憶體釋放
+    cat("\r mobile01 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+    #print(paste0('lineq第',i,'頁'))
+    Sys.sleep(runif(1,2,5))
+    
+  },error=function(e){
+    
+  })
+}
+cat("\n ")
+
+conversation_data = c()
+for(j in 1:length(links_list)){
+  tryCatch({
+    session <- html_session(links_list[j], user_agent(uastring))
+    ##頁數?
+    page_css = read_html(session) %>% html_nodes(".numbers") %>% html_text()
+    page_css = toUTF8(page_css)
+    page_max = as.numeric(substr(page_css,unlist(gregexpr('共',page_css))+1,unlist(gregexpr('頁',page_css))[2]-1))
+    
+    Sys.sleep(runif(1,2,5))
+    
+    for(i in 1:page_max){
+      url = paste0(links_list[i],'&p=',i)
+      session <- html_session(url, user_agent(uastring))
+      ##文章內容
+      text_css = read_html(session ) %>% html_nodes(".single-post-content") %>% html_text()
+      text_css = iconv(text_css,'utf8')
+      text_css = text_css[which(!is.na(text_css))]
+      text_css = unique(text_css)
+      conversation_data = c(conversation_data, text_css)
+      
+      Sys.sleep(runif(1,2,5))
+    }
+    
+    cat("\r mobile01 第 ",j, '筆 ==>' ,j/length(links_list)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+},error=function(e){
+  
+})
+}
+
+
+#page_max = max(as.numeric(iconv(page_css,'utf8'))[which(!is.na(as.numeric(iconv(page_css,'utf8'))))])
+#session <- html_session("http://www.mobile01.com/topiclist.php?f=651&p=1", user_agent(uastring))
+#title_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_text()
 ##文章列表標題
-utf8_text_title <- toUTF8(title_css) ## 將捉下來的標題轉成 UTF8
+#utf8_text_title <- iconv(title_css,'utf8') ## 將捉下來的標題轉成 UTF8
 ##文章link
-link_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_attr('href')
-links_list = paste0('http://www.mobile01.com/',link_css)
+
 
 
 
