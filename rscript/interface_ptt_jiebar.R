@@ -44,6 +44,9 @@ if(FALSE){
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/pharmacist/index',229,329,start.time)
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/Nurse/index',1000,1150,start.time)
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/medache/index',430,476,start.time)
+  
+  
+  lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq醫院',1,62,start.time)
 }
 
 #lineq_crawler_jiebar(link,forum_name,min,max,start.time)
@@ -118,8 +121,30 @@ sc_or_com <- function(n){
     temp = temp[order(-temp$總次數),]
     
     now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
-    
     write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
+    
+    comp_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
+    tmp = temp
+    for(i in 1:nrow(tmp)){
+      if(toString(which(comp_name$company==tmp$詞彙[i]))!=''){
+        tmp$詞彙[i] = comp_name$最終比對結果[which(comp_name$company==tmp$詞彙[i])]
+      }else{
+        tmp$詞彙[i] = ''
+      }
+    }
+    school_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
+    for(i in 1:nrow(tmp)){
+      if(toString(which(school_name$company==tmp$詞彙[i]))!=''){
+        tmp$詞彙[i] = school_name$最終比對結果[which(school_name$company==tmp$詞彙[i])]
+      }else{
+      }
+    }
+    tmp = tmp[which(tmp$詞彙!=''),]
+    tmp = ddply(tmp , '詞彙', summarize, 總次數=sum(總次數))
+    tmp = tmp[order(-tmp$總次數),]
+    tmp = tmp[which(tmp$詞彙!="無法判斷"),]
+    write.csv(tmp,paste0('union_output/',now,'公司整合詞彙名稱轉換後結果.csv'),row.names=F)
+    
     return(temp)
   }else{
     n <- readline(prompt="輸入[學校] or [公司]: ")
@@ -129,6 +154,8 @@ sc_or_com <- function(n){
 
 n <- readline(prompt="輸入[學校] or [公司]: ")
 output <- sc_or_com(n)
+
+
 
 ##大學名單
 
