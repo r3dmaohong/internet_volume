@@ -29,7 +29,7 @@ if(TRUE){
 
 ##服務業
 if(FALSE){
-  
+  ##少forum name
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/Finance/index',750,887,start.time)
   
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/ServiceInfo/index',310,417,start.time)
@@ -47,6 +47,9 @@ if(FALSE){
   
   
   lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq醫院',1,62,start.time)
+  
+  lineq_crawler_jiebar('http://lineq.tw/tag/182/recent?page=','lineq飯店',1,62,start.time)
+  lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq補習班',1,62,start.time)
 }
 
 #lineq_crawler_jiebar(link,forum_name,min,max,start.time)

@@ -32,12 +32,13 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
       title_css = read_html(url) %>% html_nodes("p") %>% html_text()
       temp <- iconv(title_css,'utf8')
       
-      print(paste0(substr(temp[2],1,10),'...'))
+      ##標題
+      #print(paste0(substr(temp[2],1,10),'...'))
       temp_lineq_data = c(temp_lineq_data,temp)
       ##which contains 落點
       gc() #記憶體釋放
       
-      cat("\r lineq 第",i, '筆 ==>',i/length(links_data_lineq)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+      cat("\r lineq 第",i, '筆 ==> ',substr(temp[2],1,10),'... ',i/length(links_data_lineq)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
       #print(paste0('linq第',i,'筆  ',i/length(links_data_lineq)*100,'%'))
       Sys.sleep(runif(1,2,5))
     },error=function(e){
@@ -55,7 +56,7 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   last = gsub('-','',strsplit(toString(Sys.time()),' ')[[1]][1])
   
   dir.create(forum_name, showWarnings = FALSE)
-  write.csv(recent_lineq_data,paste0(forum_name,'/',forum_name,'_',last,'_',recent,'.csv'))
+  write.csv(temp_lineq_data,paste0(forum_name,'/',forum_name,'_',last,'_',recent,'.csv'))
   
   lineq_data = temp_lineq_data
   jiebar_n(forum_name,lineq_data,recent,last)

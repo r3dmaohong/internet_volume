@@ -98,7 +98,7 @@ jiebar_n <- function(forum_name,x_data,recent,last){
   x2 = x2[which(!(x2[,1] %in% word_remove)),]
   
   #dir.create(, showWarnings = FALSE)
-  write.csv(x2,paste0(start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
+  write.csv(x2,paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
   path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
   setwd(path)
   print(paste0(forum_name,'爬蟲與分析結束'))
