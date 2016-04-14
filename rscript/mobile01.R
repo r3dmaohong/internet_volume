@@ -18,7 +18,7 @@ for(i in 1:max){
     links_list = c(links_list,links)
     
     gc() #記憶體釋放
-    cat("\r mobile01 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+    cat("\r mobile01 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
     #print(paste0('lineq第',i,'頁'))
     Sys.sleep(runif(1,2,5))
     
@@ -27,6 +27,8 @@ for(i in 1:max){
   })
 }
 cat("\n ")
+
+links_list = unique(links_list)
 
 conversation_data = c()
 for(j in 1:length(links_list)){
@@ -51,7 +53,7 @@ for(j in 1:length(links_list)){
       Sys.sleep(runif(1,2,5))
     }
     
-    cat("\r mobile01 第 ",j, '筆 : 共有',page_max,' 個分頁 ==>' ,j/length(links_list)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+    cat("\r mobile01 第 ",j, '筆 : 共有',page_max,' 個分頁 ==>' ,j/length(links_list)*100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
 },error=function(e){
   
 })
@@ -60,6 +62,10 @@ cat("\n ")
 conversation_data = gsub('\r','',conversation_data )
 conversation_data = gsub('\n','',conversation_data )
 conversation_data = trim(conversation_data)
+#temp_data = unique(conversation_data)
+
+jiebar_n(forum_name,lineq_data,recent,last)
+
 #page_max = max(as.numeric(iconv(page_css,'utf8'))[which(!is.na(as.numeric(iconv(page_css,'utf8'))))])
 #session <- html_session("http://www.mobile01.com/topiclist.php?f=651&p=1", user_agent(uastring))
 #title_css = read_html(session ) %>% html_nodes(".topic_gen") %>% html_text()

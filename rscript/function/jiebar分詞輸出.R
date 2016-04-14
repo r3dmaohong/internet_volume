@@ -33,9 +33,8 @@ jiebar_n <- function(forum_name,x_data,recent,last){
   ##瓂\xa2\026
   #remove all punctuation 
   #remove all punctuation except comma[^[:alnum:],]
+  #x_data = x_data[,2]
   x_data = gsub('[^[:alnum:]]','',x_data)
-  
-  # create progress bar
   
   for(i in 1:length(x_data)){
     tryCatch({
@@ -45,7 +44,7 @@ jiebar_n <- function(forum_name,x_data,recent,last){
       jieba_x = c(jieba_x,temp)
       jieba_x_noun = c(jieba_x_noun, get_noun(res))
       #print(paste0('jiebar :',i/length(x_data)*100,'%'))
-      cat("\r ",forum_name," jiebar : ",i/length(x_data) * 100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+      cat("\r ",forum_name," jiebar : ",i/length(x_data) * 100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
     }, error = function(e) {
       conditionMessage(e) # 這就會是"demo error"
     })

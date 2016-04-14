@@ -22,7 +22,7 @@ ptt_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     title_css = read_html(url) %>% html_nodes(".title") %>% html_nodes("a") %>% html_attr('href')
     links_data_ptt = c(links_data_ptt,title_css)
     gc() #記憶體釋放
-    cat("\r ptt 第 ",i, '頁 ',(i-min+1)/(max-min+1)*100, '% completed ',paste(replicate(100, " "), collapse = ""))
+    cat("\r ptt 第 ",i, '頁 ',(i-min+1)/(max-min+1)*100, '% completed ',paste(replicate(50, " "), collapse = ""))
     #print(paste0(forum_name,' ptt第',i,'頁'))
     Sys.sleep(runif(1,2,5))
   }
@@ -57,7 +57,7 @@ ptt_crawler_jiebar <- function(link,forum_name,min,max,start.time){
       gc() #記憶體釋放
       Sys.sleep(runif(1,2,5))
       #print(paste0(forum_name, ' ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
-      cat("\r ptt 第 ",i, '筆 ==>',i/length(links_data_ptt)*100, '% completed   ',paste(replicate(100, " "), collapse = ""))
+      cat("\r ptt 第 ",i, '筆 ==>',i/length(links_data_ptt)*100, '% completed   ',paste(replicate(50, " "), collapse = ""))
     }, error = function(e) {
       print(paste0(forum_name, ' ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
       Sys.sleep(runif(1,2,5))

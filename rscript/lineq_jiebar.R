@@ -19,7 +19,7 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     title_css = read_html(url) %>% html_nodes("p") %>% html_nodes("a") %>% html_attr('href')
     links_data_lineq = c(links_data_lineq,title_css)
     gc() #記憶體釋放
-    cat("\r lineq 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+    cat("\r lineq 第 ",i, '頁 ==>' ,i/max*100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
     #print(paste0('lineq第',i,'頁'))
     Sys.sleep(runif(1,2,5))
   }
@@ -38,7 +38,7 @@ lineq_crawler_jiebar <- function(link,forum_name,min,max,start.time){
       ##which contains 落點
       gc() #記憶體釋放
       
-      cat("\r lineq 第",i, '筆 ==> ',substr(temp[2],1,10),'... ',i/length(links_data_lineq)*100, '% completed                              ',paste(replicate(100, " "), collapse = ""))
+      cat("\r lineq 第",i, '筆 ==> ',substr(temp[2],1,10),'... ',i/length(links_data_lineq)*100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
       #print(paste0('linq第',i,'筆  ',i/length(links_data_lineq)*100,'%'))
       Sys.sleep(runif(1,2,5))
     },error=function(e){
