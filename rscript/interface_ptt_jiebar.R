@@ -124,29 +124,41 @@ sc_or_com <- function(n){
     temp = temp[order(-temp$總次數),]
     
     now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
+    dir.create('union_output', showWarnings = FALSE)
     write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
     
     comp_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
     tmp = temp
+    tmp$對應 = ''
     for(i in 1:nrow(tmp)){
-      if(toString(which(comp_name$company==tmp$詞彙[i]))!=''){
-        tmp$詞彙[i] = comp_name$最終比對結果[which(comp_name$company==tmp$詞彙[i])]
+      if(toString(which(tolower(comp_name$company)==tmp$詞彙[i]))!=''){
+        tmp$對應[i] = comp_name$最終比對結果[which(tolower(comp_name$company)==tmp$詞彙[i])][1]
+      }else if(toString(which(tolower(comp_name$最終比對結果)==tmp$詞彙[i]))!=''){
+        tmp$對應[i] = comp_name$最終比對結果[which(tolower(comp_name$最終比對結果)==tmp$詞彙[i])][1]
       }else{
-        tmp$詞彙[i] = ''
+        tmp$對應[i] = ''
       }
     }
     school_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
     for(i in 1:nrow(tmp)){
-      if(toString(which(school_name$company==tmp$詞彙[i]))!=''){
-        tmp$詞彙[i] = school_name$最終比對結果[which(school_name$company==tmp$詞彙[i])]
+      if(toString(which(tolower(school_name$trim後原始)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+        tmp$對應[i] = school_name$對應表[which(tolower(school_name$trim後原始)==tmp$詞彙[i])][1]
+      }else if(toString(which(tolower(school_name$對應表)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+        tmp$對應[i] = school_name$對應表[which(tolower(school_name$對應表)==tmp$詞彙[i])][1]
       }else{
       }
     }
-    tmp = tmp[which(tmp$詞彙!=''),]
-    tmp = ddply(tmp , '詞彙', summarize, 總次數=sum(總次數))
+    remove_text = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
+    tmp = tmp[which(!tmp[,1] %in% remove_text$V1),]
+    ##保留原字串
+    write.csv(tmp,paste0('union_output/',now,'保留原字串公司對照詞彙名稱轉換後結果.csv'),row.names=F)
+    
+    tmp = tmp[which(tmp$對應!=''),]
+    tmp = ddply(tmp , '對應', summarize, 總次數=sum(總次數))
     tmp = tmp[order(-tmp$總次數),]
-    tmp = tmp[which(tmp$詞彙!="無法判斷"),]
-    write.csv(tmp,paste0('union_output/',now,'公司整合詞彙名稱轉換後結果.csv'),row.names=F)
+    tmp = tmp[which(tmp$對應!="無法判斷"),]
+    
+    write.csv(tmp,paste0('union_output/',now,'公司對照詞彙名稱轉換後結果.csv'),row.names=F)
     
     return(temp)
   }else{
@@ -175,3 +187,61 @@ comp = read.table('D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt')
 ##抓不在大學名單內
 nc = output[which(!(output[,1] %in% comp[,1])),]
 write.csv(nc,'union_output/20160408服務業整合詞彙結果.csv',row.names=F)
+
+
+##手動整理的
+if(F){
+  path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\手動整理各檔案")
+  setwd(path)
+  csv_list = list.files(pattern="*.csv")
+  for(i in 1:length(csv_list)){
+    temp = read.csv(csv_list[i],stringsAsFactors=F)
+    colnames(temp) = c('詞彙','次數')
+    if(i==1){
+      all_temp = temp
+    }else{
+      all_temp = rbind(all_temp,temp)
+    }
+  }
+  
+  library(plyr)
+  temp = ddply(all_temp , '詞彙', summarize, 總次數=sum(次數))
+  temp = temp[order(-temp$總次數),]
+  
+  now = format(Sys.time(), "%Y_%m_%d_%H_%M_%OS")
+  dir.create('union_output', showWarnings = FALSE)
+  write.csv(temp,paste0('union_output/',now,'整合詞彙結果.csv'),row.names=F)
+  
+  comp_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\__處理後公司名稱.csv',stringsAsFactors=F)
+  tmp = temp
+  tmp$對應 = ''
+  for(i in 1:nrow(tmp)){
+    if(toString(which(tolower(comp_name$company)==tmp$詞彙[i]))!=''){
+      tmp$對應[i] = comp_name$最終比對結果[which(tolower(comp_name$company)==tmp$詞彙[i])][1]
+    }else if(toString(which(tolower(comp_name$最終比對結果)==tmp$詞彙[i]))!=''){
+      tmp$對應[i] = comp_name$最終比對結果[which(tolower(comp_name$最終比對結果)==tmp$詞彙[i])][1]
+    }else{
+      tmp$對應[i] = ''
+    }
+  }
+  school_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
+  for(i in 1:nrow(tmp)){
+    if(toString(which(tolower(school_name$trim後原始)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+      tmp$對應[i] = school_name$對應表[which(tolower(school_name$trim後原始)==tmp$詞彙[i])][1]
+    }else if(toString(which(tolower(school_name$對應表)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+      tmp$對應[i] = school_name$對應表[which(tolower(school_name$對應表)==tmp$詞彙[i])][1]
+    }else{
+    }
+  }
+  remove_text = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
+  tmp = tmp[which(!tmp[,1] %in% remove_text$V1),]
+  ##保留原字串
+  write.csv(tmp,paste0('union_output/',now,'保留原字串公司對照詞彙名稱轉換後結果.csv'),row.names=F)
+  
+  tmp = tmp[which(tmp$對應!=''),]
+  tmp = ddply(tmp , '對應', summarize, 總次數=sum(總次數))
+  tmp = tmp[order(-tmp$總次數),]
+  tmp = tmp[which(tmp$對應!="無法判斷"),]
+  
+  write.csv(tmp,paste0('union_output/',now,'公司對照詞彙名稱轉換後結果.csv'),row.names=F)
+}

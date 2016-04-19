@@ -81,24 +81,42 @@ jiebar_n <- function(forum_name,x_data,recent,last){
   write.csv(jieba_x_cdf,paste0(forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
   write.csv(jieba_x_n_cdf,paste0(forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba名詞',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
   
-  
   tmp = tmp[,c('company','最終比對結果')]
   tmp2 = tmp2[,1:2]
   colnames(tmp) = c('before','after')
   colnames(tmp2) = c('before','after')
   tmp3 = rbind(tmp,tmp2)
   
-  inter_list= intersect(jieba_x_cdf[,1],word_DB)
-  x2 = jieba_x_cdf[which(jieba_x_cdf[,1] %in% inter_list),]
+  if(exists('jieba_x_cdf')){
+    inter_list= intersect(jieba_x_cdf[,1],word_DB)
+    x2 = jieba_x_cdf[which(jieba_x_cdf[,1] %in% inter_list),]
+    
+    ##讀取剔除表
+    word_remove = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
+    word_remove = word_remove[,1]
+    x2 = x2[which(!(x2[,1] %in% word_remove)),]
+    
+    #dir.create(, showWarnings = FALSE)
+    write.csv(x2,paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
+    path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+    setwd(path)
+    print(paste0(forum_name,'爬蟲與分析結束'))
+  }else if(exists('jieba_x_n_cdf')){
+    inter_list= intersect(jieba_x_n_cdf[,1],word_DB)
+    x2 = jieba_x_n_cdf[which(jieba_x_n_cdf[,1] %in% inter_list),]
+    
+    ##讀取剔除表
+    word_remove = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
+    word_remove = word_remove[,1]
+    x2 = x2[which(!(x2[,1] %in% word_remove)),]
+    
+    #dir.create(, showWarnings = FALSE)
+    write.csv(x2,paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
+    path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+    setwd(path)
+    print(paste0(forum_name,'爬蟲與分析結束'))
+  }else{
+    print("分析失敗")
+  }
   
-  ##讀取剔除表
-  word_remove = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
-  word_remove = word_remove[,1]
-  x2 = x2[which(!(x2[,1] %in% word_remove)),]
-  
-  #dir.create(, showWarnings = FALSE)
-  write.csv(x2,paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time,'/',forum_name,'_',recent,'_',last,'交集結果.csv'),row.names=F)
-  path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
-  setwd(path)
-  print(paste0(forum_name,'爬蟲與分析結束'))
 }
