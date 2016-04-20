@@ -191,7 +191,7 @@ write.csv(nc,'union_output/20160408服務業整合詞彙結果.csv',row.names=F)
 
 ##手動整理的
 if(F){
-  path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\手動整理各檔案")
+  path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\公司手動整理各檔案")
   setwd(path)
   csv_list = list.files(pattern="*.csv")
   for(i in 1:length(csv_list)){
@@ -224,15 +224,15 @@ if(F){
       tmp$對應[i] = ''
     }
   }
-  school_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
-  for(i in 1:nrow(tmp)){
-    if(toString(which(tolower(school_name$trim後原始)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
-      tmp$對應[i] = school_name$對應表[which(tolower(school_name$trim後原始)==tmp$詞彙[i])][1]
-    }else if(toString(which(tolower(school_name$對應表)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
-      tmp$對應[i] = school_name$對應表[which(tolower(school_name$對應表)==tmp$詞彙[i])][1]
-    }else{
-    }
-  }
+  #school_name = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
+  #for(i in 1:nrow(tmp)){
+  #  if(toString(which(tolower(school_name$trim後原始)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+  #    tmp$對應[i] = school_name$對應表[which(tolower(school_name$trim後原始)==tmp$詞彙[i])][1]
+  #  }else if(toString(which(tolower(school_name$對應表)==tmp$詞彙[i]))!='' & tmp$對應[i]==''){
+  #    tmp$對應[i] = school_name$對應表[which(tolower(school_name$對應表)==tmp$詞彙[i])][1]
+  #  }else{
+  #  }
+  #}
   remove_text = read.table("D:\\abc\\wjhong\\projects\\internet_volume\\應剔除字串.txt")
   tmp = tmp[which(!tmp[,1] %in% remove_text$V1),]
   ##保留原字串
