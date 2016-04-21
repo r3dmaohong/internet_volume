@@ -25,6 +25,10 @@ if(TRUE){
   ##730 848
   #https://www.ptt.cc/bbs/V_ScHooL/index848.html
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/V_ScHooL/index','ptt測試',730,848,start.time)
+  
+  
+  lineq_crawler_jiebar('http://lineq.tw/tag/369/recent?page=','lineq技職教育',1,1913,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/graduate/index','ptt graduate',1200,1529,start.time)
 }
 
 ##服務業
