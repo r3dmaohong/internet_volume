@@ -1,14 +1,9 @@
 ##ptt jieba
 library(rvest)
-library(plyr)
 library(XML)
 library(RCurl)
-library(SnowballC)
-library(cluster)   
-library(XML)
-library(RCurl) 
 
-ptt_crawler_jiebar <- function(link,forum_name,min,max,start.time){
+ptt_crawler_jiebar <- function(link, forum_name ,min=1 , max=999999, start.time = paste0('未填寫_',gsub(":","_",Sys.time()))){
   links_data_ptt = {}
   ##先讀取各頁文章的網址
   #forum_name = substr(link,unlist(gregexpr(pattern ='bbs',link))+4,unlist(gregexpr(pattern ='index',link))-2)
@@ -19,46 +14,64 @@ ptt_crawler_jiebar <- function(link,forum_name,min,max,start.time){
     #https://www.ptt.cc/bbs/Salary/index1896.html
     #'https://www.ptt.cc/bbs/ServiceInfo/index'
     url <- paste(link, tmp, sep='')
-    title_css = read_html(url) %>% html_nodes(".title") %>% html_nodes("a") %>% html_attr('href')
-    links_data_ptt = c(links_data_ptt,title_css)
-    gc() #記憶體釋放
-    cat("\r ptt 第 ",i, '頁 ',(i-min+1)/(max-min+1)*100, '% completed ',paste(replicate(50, " "), collapse = ""))
-    #print(paste0(forum_name,' ptt第',i,'頁'))
-    Sys.sleep(runif(1,2,5))
+    tryCatch({
+      title_css <<- read_html(url) %>% html_nodes(".title") %>% html_nodes("a") %>% html_attr('href')
+    }, error = function(e) {
+      title_css <<- ""
+
+    })
+    if(toString(title_css)!=''){
+      links_data_ptt = c(links_data_ptt,title_css)
+      gc() #記憶體釋放
+      cat("\r ptt 第 ",i, '頁 ',paste(replicate(50, " "), collapse = ""))
+      #print(paste0(forum_name,' ptt第',i,'頁'))
+      Sys.sleep(runif(1,2,5))
+    }else{
+      break
+    }
   }
   cat("\n ")
+  
+  max = i - 1 
+  print(paste0('已爬到最底頁 : ', max , '頁' ))
   ##剔除部相關之網址(挑選時已替除，不過在判斷一次)
   #links_data_ptt =  links_data_ptt[which(grepl(forum_name,links_data_ptt))]
   
-  ptt_data = {}
+  ptt_data = data.frame('Date'=character(),'Content'=character(),stringsAsFactors=F)
+  xrow = 1
   ##將抓出的網址進行爬蟲
   for(i in 1:length(links_data_ptt)){
     tryCatch({
       url = paste0('https://www.ptt.cc',links_data_ptt[i])
-      title_css = read_html(url) %>% html_nodes("#main-content") %>% html_text()
-      utf8_text_title <- iconv(title_css,'utf8')
+      total_css = read_html(url) 
+      
+      content_css = total_css %>% html_nodes("#main-content") %>% html_text()
+      utf8_text_content <- iconv(content_css,'utf8')
+      
+      date_css = total_css %>% html_nodes(".article-meta-value") %>% html_text()
+      date_css = date_css[4]
       
       ##去除id
-      title_css1 = read_html(url) %>% html_nodes("span") %>% html_text()
-      utf8_text_title1 <- iconv(title_css1,'utf8')
+      id_css = total_css %>% html_nodes("span") %>% html_text()
+      utf8_text_id <- iconv(id_css,'utf8')
       
-      id_delete = utf8_text_title1[which(grepl(': ',utf8_text_title1))-1]
-      id_delete = c(id_delete, utf8_text_title1[1:8])
+      id_delete = utf8_text_id[which(grepl(': ',utf8_text_id))-1]
+      id_delete = c(id_delete, utf8_text_id[1:8])
       id_delete = id_delete[which(!is.na(id_delete))]
       for(x in 1:length(id_delete)){
-        utf8_text_title=gsub(id_delete[x],'',utf8_text_title)
+        utf8_text_content=gsub(id_delete[x],'',utf8_text_content)
       }
       
-      temp = utf8_text_title
+      #temp = content_css
+      ptt_data[xrow,] = c(date_css, utf8_text_content)
+      xrow = xrow + 1
       
-      ##: 前兩個去掉
-      ptt_data = c(ptt_data,temp)
-      ##which contains 落點
       gc() #記憶體釋放
       Sys.sleep(runif(1,2,5))
       #print(paste0(forum_name, ' ptt第',i,'筆  ',i/length(links_data_ptt)*100,'%'))
       cat("\r ptt 第 ",i, '筆 ==>',i/length(links_data_ptt)*100, '% completed   ',paste(replicate(50, " "), collapse = ""))
     }, error = function(e) {
+      cat("\n ")
       print(paste0(forum_name, ' ptt第',i,'筆 失敗 ',i/length(links_data_ptt)*100,'%'))
       Sys.sleep(runif(1,2,5))
     })
@@ -67,9 +80,13 @@ ptt_crawler_jiebar <- function(link,forum_name,min,max,start.time){
   cat("\n ")
   print(paste0(forum_name,' : ',length(ptt_data),'筆'))
   
-  dir.create(forum_name, showWarnings = FALSE)
-  write.csv(ptt_data,paste0(forum_name,'/',forum_name,'_',min,'_',max,'.csv'))
+  ptt_data = unique(ptt_data)
   
+  dir.create('爬蟲原始資料', showWarnings = FALSE)
+  dir.create(paste0('爬蟲原始資料/',forum_name), showWarnings = FALSE)
+  write.csv(ptt_data,paste0('爬蟲原始資料/',forum_name,'/',forum_name,'_',min,'_',max,'.csv'),row.names=F)
+  
+  ptt_data = ptt_data$Content
   jiebar_n(forum_name,ptt_data,min,max)
 }
 

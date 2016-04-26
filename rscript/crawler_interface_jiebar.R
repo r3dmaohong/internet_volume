@@ -2,8 +2,7 @@ rm(list = ls()) #去除工作空間中所有物件
 gc() #記憶體釋放
 path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
 setwd(path)
-start.time<-Sys.time()
-start.time = gsub(":","_",start.time)
+start.time = gsub(":","_",Sys.time())
 
 mainDir = paste0('D:\\abc\\wjhong\\projects\\internet_volume\\output\\',start.time)
 dir.create(file.path(mainDir), showWarnings = FALSE)
@@ -24,20 +23,18 @@ if(TRUE){
   
   ##730 848
   #https://www.ptt.cc/bbs/V_ScHooL/index848.html
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/V_ScHooL/index','ptt測試',730,848,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/V_ScHooL/index','ptt V_ScHooL',730,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/graduate/index','ptt graduate',1200,,start.time)
   
-  
-  lineq_crawler_jiebar('http://lineq.tw/tag/369/recent?page=','lineq技職教育',1,1913,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/graduate/index','ptt graduate',1200,1529,start.time)
+  #lineq_crawler_jiebar('http://lineq.tw/tag/369/recent?page=','lineq技職教育',1,start.time)
+  lineq_crawler_jiebar('http://lineq.tw/tag/369/recent?page=','lineq技職教育',,,start.time)
 }
 
 ##服務業
 if(FALSE){
   ##少forum name
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/Finance/index',750,887,start.time)
-  
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/ServiceInfo/index',310,417,start.time)
-  
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/Salesperson/index',650,762,start.time)
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/unemployed/index',50,113,start.time)
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/hairdo/index',1050,1291,start.time)
@@ -51,7 +48,6 @@ if(FALSE){
   
   
   lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq醫院',1,62,start.time)
-  
   lineq_crawler_jiebar('http://lineq.tw/tag/1127/recent?page=','lineq飯店',1,173,start.time)
   lineq_crawler_jiebar('http://lineq.tw/tag/182/recent?page=','lineq補習班',1,681,start.time)
 }

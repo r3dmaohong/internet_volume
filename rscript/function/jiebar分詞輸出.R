@@ -44,7 +44,7 @@ jiebar_n <- function(forum_name,x_data,recent,last){
       jieba_x = c(jieba_x,temp)
       jieba_x_noun = c(jieba_x_noun, get_noun(res))
       #print(paste0('jiebar :',i/length(x_data)*100,'%'))
-      cat("\r ",forum_name," jiebar : ",i/length(x_data) * 100, '% completed                              ',paste(replicate(50, " "), collapse = ""))
+      cat("\r ",forum_name," jiebar : ",i/length(x_data) * 100, '% completed',paste(replicate(50, " "), collapse = ""))
     }, error = function(e) {
       conditionMessage(e) # 這就會是"demo error"
     })
@@ -77,9 +77,10 @@ jiebar_n <- function(forum_name,x_data,recent,last){
   jieba_x_cdf = data_ep(jieba_x)
   jieba_x_n_cdf = data_ep(jieba_x_noun)
   
-  dir.create(forum_name, showWarnings = FALSE)
-  write.csv(jieba_x_cdf,paste0(forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
-  write.csv(jieba_x_n_cdf,paste0(forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba名詞',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
+  dir.create('爬蟲分詞後資料', showWarnings = FALSE)
+  dir.create(paste0('爬蟲分詞後資料/',forum_name), showWarnings = FALSE)
+  write.csv(jieba_x_cdf,paste0('爬蟲分詞後資料/',forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
+  write.csv(jieba_x_n_cdf,paste0('爬蟲分詞後資料/',forum_name,'/',format(Sys.time(), "%Y_%m_%d_%H_%M_%OS"),'jieba名詞',forum_name,'_',recent,'_',last,'.csv'),row.names=F)
   
   tmp = tmp[,c('company','最終比對結果')]
   tmp2 = tmp2[,1:2]
