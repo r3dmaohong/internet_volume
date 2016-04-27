@@ -32,19 +32,18 @@ if(TRUE){
 
 ##服務業
 if(FALSE){
-  ##少forum name
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Finance/index',750,887,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/ServiceInfo/index',310,417,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Salesperson/index',650,762,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/unemployed/index',50,113,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/hairdo/index',1050,1291,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Depstore/index',900,946,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Salary/index',1200,1921,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Broker/index',150,211,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Therapist/index156.html',110,156,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/pharmacist/index',229,329,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Nurse/index',1000,1150,start.time)
-  ptt_crawler_jiebar('https://www.ptt.cc/bbs/medache/index',430,476,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Finance/index',,750,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/ServiceInfo/index',,310,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Salesperson/index',,650,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/unemployed/index',,50,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/hairdo/index',,1050,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Depstore/index',,900,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Salary/index',,1200,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Broker/index',,150,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Therapist/index',,110,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/pharmacist/index',,229,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Nurse/index',,1000,,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/medache/index',,430,,start.time)
   
   
   lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq醫院',1,62,start.time)

@@ -83,7 +83,7 @@ dcard_crawler <- function(minmax){
   }
 }
 
-dcard_crawler(1304654)
+dcard_crawler(1307696)
 
 
 

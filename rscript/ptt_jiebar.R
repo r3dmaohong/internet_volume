@@ -3,7 +3,7 @@ library(rvest)
 library(XML)
 library(RCurl)
 
-ptt_crawler_jiebar <- function(link, forum_name ,min=1 , max=999999, start.time = paste0('未填寫_',gsub(":","_",Sys.time()))){
+ptt_crawler_jiebar <- function(link, forum_name = paste0('ptt ',substr(link,unlist(gregexpr(pattern ='bbs',link))+4,unlist(gregexpr(pattern ='index',link))-2)) ,min=1 , max=999999, start.time = paste0('未填寫_',gsub(":","_",Sys.time()))){
   links_data_ptt = {}
   ##先讀取各頁文章的網址
   #forum_name = substr(link,unlist(gregexpr(pattern ='bbs',link))+4,unlist(gregexpr(pattern ='index',link))-2)
