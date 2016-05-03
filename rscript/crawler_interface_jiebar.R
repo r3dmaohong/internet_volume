@@ -46,9 +46,9 @@ if(FALSE){
   ptt_crawler_jiebar('https://www.ptt.cc/bbs/medache/index',,430,,start.time)
   
   
-  lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq洛皘',1,62,start.time)
-  lineq_crawler_jiebar('http://lineq.tw/tag/1127/recent?page=','lineq逗┍',1,173,start.time)
-  lineq_crawler_jiebar('http://lineq.tw/tag/182/recent?page=','lineq干策痁',1,681,start.time)
+  lineq_crawler_jiebar('http://lineq.tw/tag/1647/recent?page=','lineq洛皘',,,start.time)
+  lineq_crawler_jiebar('http://lineq.tw/tag/1127/recent?page=','lineq逗┍',,,start.time)
+  lineq_crawler_jiebar('http://lineq.tw/tag/182/recent?page=','lineq干策痁',,,start.time)
 }
 
 #lineq_crawler_jiebar(link,forum_name,min,max,start.time)
