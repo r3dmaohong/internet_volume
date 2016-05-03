@@ -59,10 +59,9 @@ if(FALSE){
 #https://tw.answers.yahoo.com/search/search_result?p=%E7%A7%91%E5%A4%A7&s=
 
 ##整合所有檔案
-sc_or_com <- function(n){
+sc_or_com <- function(n,path=paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)){
   if(n=='學校'){
     ##學校就轉換然後重新算一次freq
-    path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)
     setwd(path)
     csv_list = list.files(pattern="*.csv")
     for(i in 1:length(csv_list)){
@@ -106,7 +105,6 @@ sc_or_com <- function(n){
   }else if(n=='公司'){
     ##公司就不對照轉換了
     ##以免有問題
-    path<-paste0("D:\\abc\\wjhong\\projects\\internet_volume\\output\\",start.time)
     setwd(path)
     csv_list = list.files(pattern="*.csv")
     for(i in 1:length(csv_list)){
@@ -168,7 +166,7 @@ sc_or_com <- function(n){
 }
 
 n <- readline(prompt="輸入[學校] or [公司]: ")
-output <- sc_or_com(n)
+output <- sc_or_com(n,"D:\\abc\\wjhong\\projects\\internet_volume\\output\\公司5_3")
 
 
 
