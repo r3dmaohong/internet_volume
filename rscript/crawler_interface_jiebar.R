@@ -76,6 +76,8 @@ sc_or_com <- function(n,path=paste0("D:\\abc\\wjhong\\projects\\internet_volume\
     
     tmp2 = read.csv('D:\\abc\\wjhong\\projects\\school_performence_analysis\\學校名稱正規化表格.csv',stringsAsFactors=F)
     tmp2[,1] = tolower(tmp2[,1])
+    ##英文踢掉好了太含糊
+    tmp2 = tmp2[which(!grepl("[a-z]",tmp2[,1])),]
     all_temp$out=''
     for(i in 1:nrow(all_temp)){
       if(toString(tmp2[which(tmp2[,1]==all_temp[i,1]),2])!=''){
@@ -166,7 +168,7 @@ sc_or_com <- function(n,path=paste0("D:\\abc\\wjhong\\projects\\internet_volume\
 }
 
 n <- readline(prompt="輸入[學校] or [公司]: ")
-output <- sc_or_com(n,"D:\\abc\\wjhong\\projects\\internet_volume\\output\\公司5_3")
+output <- sc_or_com(n,'D:\\abc\\wjhong\\projects\\internet_volume\\output\\2016-04-07 14_06_45')
 
 
 
@@ -175,7 +177,7 @@ college = read.table('D:\\abc\\wjhong\\projects\\internet_volume\\大學名單.txt')
 
 ##抓不在大學名單內
 nc = output[which(!(output[,1] %in% college[,1])),]
-write.csv(nc,'union_output/20160425科大整合詞彙結果.csv',row.names=F)
+write.csv(nc,'union_output/20160615-2科大整合詞彙結果.csv',row.names=F)
 
 
 ##公司
