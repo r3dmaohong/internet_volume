@@ -1,24 +1,35 @@
 rm(list = ls()) #去除工作空間中所有物件
 gc() #記憶體釋放
-path<-"D:\\abc\\wjhong\\projects\\internet_volume\\output"
+path<-choose.dir()
+if(!grepl('output',path)){
+  dir.create(paste0(path,'\\output'), showWarnings = FALSE)
+  path <- paste0(path,'\\output')
+}
+
 setwd(path)
 start.time = gsub(":","_",Sys.time())
 
-mainDir = paste0('D:\\abc\\wjhong\\projects\\internet_volume\\output\\',start.time)
+mainDir = paste0(path,start.time)
 dir.create(file.path(mainDir), showWarnings = FALSE)
 dir.create(file.path(paste0(mainDir,'\\union_output')), showWarnings = FALSE)
 dir.create(file.path(paste0(mainDir,'\\紀錄')), showWarnings = FALSE)
 
 ##各網站
-source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\ptt_jiebar.R', print.eval  = TRUE)
-source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\lineq_jiebar.R', print.eval  = TRUE)
-source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\yahoo++_jiebar.R', print.eval  = TRUE)
+source('..\\rscript\\ptt_jiebar.R', print.eval  = TRUE)
+source('..\\rscript\\lineq_jiebar.R', print.eval  = TRUE)
+source('..\\rscript\\yahoo++_jiebar.R', print.eval  = TRUE)
 
 ##jiebar提取
-source('D:\\abc\\wjhong\\projects\\internet_volume\\rscript\\function\\jiebar分詞輸出.R', print.eval  = TRUE)
+source('..\\rscript\\function\\jiebar分詞輸出.R', print.eval  = TRUE)
+
+if(T){
+  lineq_crawler_jiebar('http://lineq.tw/search/question?q=%E8%8F%AF%E8%88%AA&sort=date&sel=all&page=','lineq華航',,70,start.time)
+  ptt_crawler_jiebar('https://www.ptt.cc/bbs/Gossiping/index',,750,,start.time)
+}
+
 
 ##科大
-if(TRUE){
+if(F){
   yahoo_crawler_jiebar('https://tw.answers.yahoo.com/search/search_result?p=科大&s=','yahoo科大',1,200,start.time)
   
   ##730 848

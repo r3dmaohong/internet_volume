@@ -22,9 +22,11 @@ lineq_crawler_jiebar <- function(link, forum_name, min = 1,max = 9999999, start.
 
   }
   cat("\n ")
-  max = i - 1 
+  if(max=9999999)
+    max = i - 1 
   print(paste0('¤wª¦¨ì³Ì©³­¶ : ', max , '­¶' ))
   ##temp_lineq_data = {}
+  links_data_lineq = unique(links_data_lineq)
   
   lineq_data = data.frame('Date'=character(),'Content'=character(),stringsAsFactors=F)
   xrow = 1
