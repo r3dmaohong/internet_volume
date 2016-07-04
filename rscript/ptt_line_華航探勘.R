@@ -1,4 +1,6 @@
 ##華航
+#Error in nchar(homeDir) : invalid multibyte string, element 1
+#Sys.setenv(homeDir="D:/洪維均")
 path = choose.dir()
 setwd(path)
 line <- read.csv('line華航.csv',stringsAsFactors = F)
